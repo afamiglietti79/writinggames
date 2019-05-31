@@ -1,2 +1,3 @@
 writinggames/settings.py
 writinggames/wsgi.py
+__pycache__/
