@@ -1,0 +1,22 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap/css/bootstrap.css' %}">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Serif|Overpass:300&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
+  <title>{% block title %}Writing Games{% endblock %}</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

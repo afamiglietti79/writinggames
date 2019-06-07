@@ -1,0 +1,65 @@
+.intro {
+  font-size: .8em;
+  font-weight: lighter;
+  font-style: italic;
+}
+
+
+body {
+  font-family: 'Noto Serif', serif;
+  background-color: #0B373B;
+}
+
+.container {
+  background-color: #DEDEDE;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0.5rem;
+  font-family: 'Overpass', sans-serif;
+  font-weight: 300;
+}
+
+h1{
+  padding: 0px 10px;
+}
+
+.JJ, .JJR, .JJS, .NN, .NNS, .NNP, .NNPS, .VB, .VBP, .VBZ, .VBD, .RB, .RBR, .RBS {
+  padding: 1px 2px;
+}
+
+.JJ, .JJR, .JJS {
+  background-color: #59829D;
+}
+
+.JJR, .JJS {
+  font-style: italic;
+}
+
+.NN, .NNS, .NNP, .NNPS {
+  background-color: #6AC56A;
+}
+
+.VB, .VBP, .VBZ, .VBD {
+  background-color: #F68484;
+}
+
+.RB, .RBR, .RBS {
+  background-color: #F6C484
+}
+
+.RBR, .RBS {
+  font-style: italic;
+}
+
+.PRP {
+  font-weight: bolder;
+}
+
+.CC {
+  text-decoration: underline;
+}
+
+.common_word {
+  color: red;
+}
