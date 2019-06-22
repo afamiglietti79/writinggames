@@ -7,24 +7,28 @@ from django.utils import timezone
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import DocForm
 from .models import VisDoc
 
 # Create your views here.
 
-class index(View):
-
-    thing1 = 0
-
-    def helperFunction(self):
-        self.thing1 = self.thing1 + 1
-        return("This function works! Yas! Thing 1 is:" + str(self.thing1))
+class index(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request):
-        return HttpResponse(self.helperFunction())
+        user = request.user
+        my_docs = user.visdoc_set.all()
+        active_roll = request.user.roll_set.get(is_active = True)
+        course_docs = active_roll.course.visdoc_set.all().exclude(creator=user)
+        return render(request, 'textvis/index.html', {'my_docs':my_docs, 'course_docs':course_docs} )
 
-class new(View):
+class new(LoginRequiredMixin, View):
+
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
 
     stopwords = set(nltk.corpus.stopwords.words('english'))
     formatted_text = ""
@@ -106,6 +110,9 @@ class new(View):
             new_doc.lexical_density =  lexcial_count / new_doc.word_count
 
             new_doc.name=form.cleaned_data['name']
+            new_doc.creator=request.user
+            active_roll = request.user.roll_set.get(is_active = True)
+            new_doc.host_course = active_roll.course
             new_doc.text=self.formatted_text
             new_doc.date_created=timezone.now()
             new_doc.avg_word_len = word_len_sum/new_doc.word_count
@@ -116,6 +123,11 @@ class new(View):
             form = DocForm()
             return render(request, 'textvis/new.html', { 'form': form })
 
-def display(request, doc_id):
-    doc = get_object_or_404(VisDoc, pk=doc_id)
-    return render(request, 'textvis/display.html', { 'doc': doc})
+class display(LoginRequiredMixin, View):
+
+        login_url = '/login/'
+        redirect_field_name = 'redirect_to'
+
+        def get(self, request, doc_id):
+                doc = get_object_or_404(VisDoc, pk=doc_id)
+                return render(request, 'textvis/display.html', { 'doc': doc})

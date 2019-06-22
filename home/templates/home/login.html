@@ -1,0 +1,22 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+  <h2>Log In</h2>
+  <form method="post">
+    {% if form.subject.errors %}
+    <ol>
+    {% for error in form.subject.errors %}
+        <li><strong>{{ error|escape }}</strong></li>
+    {% endfor %}
+    </ol>
+    {% endif %}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">Login</button>
+  </form>
+  <hr>
+  <h2>Need an account?</h2>
+  <p class="intro">Click "Sign up" to create your account. You'll need the 6 character code from your
+    instructor to identify your class!</p>
+    <a href="{% url 'home:signup' %}" class='btn btn-light'>Sign Up!</a>
+{% endblock %}

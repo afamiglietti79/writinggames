@@ -2,7 +2,10 @@
 {% block content %}
 <h1>Your doc, Visualized!</h1>
 <div class="intro">
-<p>Below is the text of your document, with some key elements of style computed and highlighted.</p>
+<p>Below is the text of your document, with some key elements of style computed and highlighted.
+  <a href="#documentation" data-toggle="collapse" aria-expanded="false" aria-controls="documentation">
+  Learn more...</a></p>
+<div id="documentation" class="collapse">
 <p>Different parts of speech, like <span class="NN">nouns</span> and <span class="VB">verbs</span> have been
   counted up and highlighted. Different genres may be relatively rich or poor in certain parts of speech
   (especially <span class="JJ">adjectives</span> and <span class="RB">abverbs</span>) depending on the
@@ -14,17 +17,9 @@
   don't. Some genres may permit direct address of the reader with "you."</p>
 <p><span class="CC">Coordinating conjunctions</span> have been <span class="CC">underlined</span>. These
   words may be used to join clauses into more complex sentences. Notice where and how the author does this.</p>
-<p><a href="https://en.wikipedia.org/wiki/Lexical_diversity">Lexical diversity</a> is a measure of how many
-  unique words are used in a text. Higher lexical diversity usually indicates more complex or specialized
-  language. The lexical diversity score computed here is rough, and probably can't be
-  compared with scores from other tools. For reference, a CDC instruction sheet (designed to be clear
-  for any audience) scores a lexical diversity of about .41 in this tool, and a few pages of Shakespeare's
-  "As You Like It" scores about .48.</p>
-<p><a href="https://en.wikipedia.org/wiki/Lexical_density">Lexical Density</a> measures what proportion
-  of the document's total words are content words (nouns, verbs, adjectives, and adverbs). Higher lexical
-  density usually indicates more complex language.</p>
 </div>
-<hr>    
+</div>
+<hr>
 <h2>{{ doc.name }}</h2>
 <div class="row">
   <div class="col-3">
@@ -33,8 +28,6 @@
       <li>Average Word Length: {{ doc.avg_word_len|floatformat:2 }} Characters </li>
       <li>Avg Paragraph Length: {{ doc.para_len|floatformat }} Words</li>
       <li>Avg Sentence Length: {{ doc.sent_len|floatformat }} Words</li>
-      <li>Lexical Diversity: {{ doc.lexical_diversity|floatformat:2 }}</li>
-      <li>Lexical Density: {{ doc.lexical_density|floatformat:2 }}</li>
     </ul>
     <ul class="statlist">
       <li><span class="NN">Nouns:</span>{{ doc.percent_nouns|floatformat:2 }}%</li>

@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from course.models import course
 import json
 
 # Create your models here.
@@ -6,6 +8,8 @@ import json
 class VisDoc(models.Model):
     name = models.CharField(max_length=64)
     text = models.TextField()
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    host_course = models.ForeignKey(course, on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField()
     word_count = models.IntegerField('Word Count', default=0)
     para_count = models.IntegerField('Paragraph Count', default=0)
@@ -22,6 +26,9 @@ class VisDoc(models.Model):
     most_common_long_words = models.TextField()
     lexical_density = models.FloatField(default=0)
     lexical_diversity = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.name
 
     def para_len(self):
         return(self.word_count/self.para_count)

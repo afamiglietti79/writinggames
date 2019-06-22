@@ -1,0 +1,78 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<h1>Feud Prompts</h1>
+<h2>Active Prompts</h2>
+<p class="intro"> Here are the prompts currently active for your course. </p>
+  {% for prompt in prompt_list %}
+  {% if prompt.is_accepting_votes != prompt.VOTING_COMPLETE %}
+  <div class="card prompt-card">
+      <div class="card-header">
+        <a href="{% url 'feud:displayprompt' prompt.id %}">{{ prompt.name }}</a>
+        {% if prompt.creator == user %}
+              <a class="btn btn-sm btn-danger float-right mx-1 delete-btn" data-name="{{ prompt.name }}" data-url="{% url 'feud:deleteprompt' prompt.id %}" href="#">Delete</a>
+              <a class="btn btn-sm btn-primary float-right mx-1" href="{% url 'feud:editprompt' prompt.id %}">Edit</a>
+      {% endif %}
+      </div>
+    <div class="card-body">
+      {{ prompt.text|truncatewords:200}}
+    </div>
+  </div>
+
+  {% endif %}
+  {% empty %}
+  <div>
+    No prompts are active in this course right now!
+  </div>
+  {% endfor %}
+  {% if perms.feud.add_prompt %}
+  <a class="btn btn-primary" href="{% url 'feud:newprompt' %}">Create a new prompt</a>
+  {% endif %}
+<hr>
+<h2>Old Prompts</h2>
+<p class="intro"> Submission and voting for these prompts has been completed. </p>
+{% for prompt in prompt_list %}
+{% if prompt.is_accepting_votes == prompt.VOTING_COMPLETE %}
+<div class="card prompt-card">
+    <div class="card-header">
+      <a href="{% url 'feud:displayprompt' prompt.id %}">{{ prompt.name }}</a>
+      {% if prompt.creator == user %}
+            <a class="btn btn-sm btn-danger float-right mx-1 delete-btn" href="#" data-name="{{ prompt.name }}" data-url="{% url 'feud:deleteprompt' prompt.id %}">Delete</a>
+            <a class="btn btn-sm btn-primary float-right mx-1" href="{% url 'feud:editprompt' prompt.id %}">Edit</a>
+    {% endif %}
+    </div>
+  <div class="card-body">
+    {{ prompt.text|truncatewords:200}}
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete prompt: "<span id="promptName">{NAME}</span>"? All associated student responses will also be deleted!</p>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <a href="" id="delete_confirm" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+  $(function() {
+    $("a.delete-btn").on("click", function() {
+        $("span#promptName").replaceWith($(this).data('name'));
+        buttonTag = '<a href="' + $(this).data('url') + '" class="btn btn-danger">Delete</a>'
+        $("a#delete_confirm").replaceWith(buttonTag);
+        $('#deleteModal').modal('toggle');
+    });
+  });
+</script>
+{% endblock %}

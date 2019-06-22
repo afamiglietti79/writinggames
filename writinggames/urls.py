@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', include('home.urls')),
+    path('course/', include('course.urls')),
     path('textvis/', include('textvis.urls')),
+    path('feud/', include('feud.urls')),
     path('admin/', admin.site.urls),
 ]

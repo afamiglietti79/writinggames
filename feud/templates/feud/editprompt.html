@@ -1,0 +1,36 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<h1>Edit Feud Prompt</h1>
+
+<form action="{% url 'feud:editprompt' prompt.id %}" method="post">
+  {% csrf_token %}
+<div class="form-group row">
+  <div class="col">
+  <input class="btn btn-lg btn-primary" type="submit" value="Update Prompt">
+  {{ form.non_field_errors }}
+  </div>
+</div>
+<div class="form-group row">
+  <div class="col">
+    {{ form.name.errors }}
+    <label for="{{ form.name.id_for_label }}">Prompt Title:</label>
+    {{ form.name }}
+  </div>
+</div>
+<div class="form-group row">
+  <div class="col">
+    {{ form.text.errors }}
+    <label for="{{ form.text.id_for_label }}">Prompt Text:</label>
+    {{ form.text }}
+  </div>
+</div>
+<div class="form-group row">
+  <div class="col">
+    {{ form.is_accepting_votes.errors }}
+    <label for="{{ form.is_accepting_votes.id_for_label }}">Accepting Votes:</label>
+    {{ form.is_accepting_votes }}
+  </div>
+</div>
+
+</form>
+{% endblock %}

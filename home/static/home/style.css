@@ -7,11 +7,31 @@
 
 body {
   font-family: 'Noto Serif', serif;
-  background-color: #0B373B;
+}
+
+.sitenav {
+  font-family: 'Overpass', sans-serif;
+  font-weight: 300;
 }
 
 .container {
-  background-color: #DEDEDE;
+  border-left: 1px solid black;
+  font-size: 1.2rem;
+}
+ .prompt-card {
+   margin-bottom: 1%;
+ }
+
+.row-response {
+  padding-bottom: 2%;
+  padding-top: 1%;
+  margin-left: 3%;
+  border-bottom: 1px solid gray;
+}
+
+#prompt_controls {
+  padding-top: 1%;
+  margin-left: 3%;
 }
 
 h1, h2, h3, h4 {

@@ -1,0 +1,25 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<h1>Writing Games!</h1>
+<p class="intro">Some small online exercises for Writing Students</p>
+<div class="row">
+  <div class="col">
+    <a href = "{% url 'textvis:index' %}"><h2>Text-vis-o-matic!!</h2>
+      <p class="intro">See style features in text</p>
+    </a>
+  </div>
+  <div class="col">
+    <a href = "{% url 'feud:index' %}"><h2>FYW Feud</h2>
+      <p class="intro">Write your response to a prompt, and vote on the best contributions!</p>
+    </a>
+  </div>
+  <div class="col">
+    <a href = " "><h2>Rhetorical Scrabble</h2>
+      <p class="intro">See how language choices change meaning and tone</p>
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}

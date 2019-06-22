@@ -1,0 +1,22 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<h1>Visualize-o-matic Docs</h1>
+<p class="intro"> Below, you can view documents you and your classmates have visualized with Visualize-o-matic.
+  By default, docs more that 24 hours old will be deleted, unless you click the "retain" button on your doc. </p>
+  <a class="btn btn-lg btn-primary" href="{% url 'textvis:new' %}">Visualize Some Text!</a>
+<h2>Your Docs</h2>
+  {% for doc in my_docs %}
+  <div>
+    <a href="{% url 'textvis:display' doc.id %}"><h3>{{ doc.name }} <h3></a>
+      {{ doc.text|safe|truncatewords:100}}
+  </div>
+  {% endfor %}
+<hr>
+<h2>Classmates' Shared Docs</h2>
+{% for doc in course_docs %}
+  <div>
+    <a href="{% url 'textvis:display' 2 %}"><h3>{{ doc.name }} by {{ doc.creator.username }}<h3></a>
+      {{ doc.text|safe|truncatewords:100}}
+  </div>
+{% endfor %}
+{% endblock %}

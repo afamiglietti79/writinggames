@@ -6,5 +6,5 @@ app_name = "textvis"
 urlpatterns = [
     path('', views.index.as_view(), name='index'),
     path('new/', views.new.as_view(), name='new'),
-    path('<int:doc_id>/display/', views.display, name='display'),
+    path('<int:doc_id>/display/', views.display.as_view(), name='display'),
 ]

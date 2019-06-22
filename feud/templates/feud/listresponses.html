@@ -1,0 +1,73 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<h1>{{ prompt.name }}</h1>
+<p class="intro">Published: {{ prompt.date_created|date:"D d M Y" }} by {{ prompt.creator.username }} Vote Status: {{prompt.is_accepting_votes}}</p>
+<p>{{ prompt.text }}</p>
+<hr>
+<div id="response_wrapper">
+</div>
+{% if prompt.creator == user %}
+<div id="prompt_controls">
+<a class="btn btn-lg btn-warning float-right" href="#" id="voteToggle">{% if prompt.is_accepting_votes == prompt.WAITING_TO_VOTE or prompt.is_accepting_votes == prompt.VOTING_COMPLETE %} Open Voting {% else %} Close Voting {% endif %}</a>
+</div>
+{% endif %}
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+responses_url = "{% url 'feud:ajaxresponses' prompt.id %}"
+votetoggle_url = "{% url 'feud:togglevote' prompt.id %}"
+vote_url_template = "{% url 'feud:vote' 0 %}"
+
+$(function() {
+  function load_responses(){
+    $.getJSON( responses_url, function(data) {
+      html_string = ""
+      $("div#response_wrapper").html("");
+      row_template = "<div class='row row-response'><div class='col-9 response-text'>{RESPONSE}</div><div class='col-3 response-vote'>{VOTE_BUTTON}</div></div>"
+      vote_flag = data['vote_flag']
+      console.log(vote_flag)
+      if(vote_flag == "open") {
+        $.each(data['responses'], function(key, value) {
+          new_row = row_template.replace('{RESPONSE}', value['text'])
+          new_row = new_row.replace('{VOTE_BUTTON}', '<a href="#" class="btn btn-primary vote_btn" data-id="' + value['id'] + '">Vote</a>')
+          $("div#response_wrapper").append(new_row);
+        });
+      }
+      else if(vote_flag =="wait"){
+        $.each(data['responses'], function(key, value) {
+          new_row = row_template.replace('{RESPONSE}', value['text'])
+          new_row = new_row.replace('{VOTE_BUTTON}', '<a href="#" class="btn btn-secondary">Waiting to vote</a>')
+          $("div#response_wrapper").append(new_row);
+        });
+      }
+      else {
+        $.each(data['responses'], function(key, value) {
+          console.log(value)
+          new_row = row_template.replace('{RESPONSE}', value['text'])
+          new_row = new_row.replace('{VOTE_BUTTON}', 'Votes: ' + value['votes'])
+          $("div#response_wrapper").append(new_row);
+        });
+      }
+
+
+      $("a.vote_btn").on("click", function(event){
+        vote_url = vote_url_template.replace('0', $(this).data('id'))
+        $.getJSON(vote_url, function(data) {
+        });
+        load_responses();
+      });
+    })
+  }
+
+  load_responses();
+
+  $("#voteToggle").on("click", function() {
+    $.getJSON(votetoggle_url, function(data) {
+      $("a#voteToggle").html(data['button_label'])
+    });
+    load_responses();
+  });
+  var intervalID = window.setInterval(load_responses, 10000);
+})
+</script>
+{% endblock %}
