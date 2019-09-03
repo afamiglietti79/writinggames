@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from .forms import DocForm
 from .models import VisDoc
@@ -20,9 +21,25 @@ class index(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
-        my_docs = user.visdoc_set.all()
         active_roll = request.user.roll_set.get(is_active = True)
-        course_docs = active_roll.course.visdoc_set.all().exclude(creator=user)
+        since_cleared =  timezone.now().date() - active_roll.course.last_cleared
+        print(since_cleared.days)
+        if since_cleared.days >= 1:
+            course = active_roll.course
+            all_docs = active_roll.course.visdoc_set.all()
+            for doc in all_docs:
+                age = timezone.now() - doc.date_created
+                print(age.days)
+                if age.days >=1 and doc.retained == False:
+                    doc.delete()
+            my_docs = user.visdoc_set.all()
+            course_docs = active_roll.course.visdoc_set.all().exclude(creator=user)
+            course.last_cleared = timezone.now()
+            course.save()
+        else:
+            my_docs = user.visdoc_set.all()
+            course_docs = active_roll.course.visdoc_set.all().exclude(creator=user)
+
         return render(request, 'textvis/index.html', {'my_docs':my_docs, 'course_docs':course_docs} )
 
 class new(LoginRequiredMixin, View):
@@ -120,6 +137,7 @@ class new(LoginRequiredMixin, View):
 
             return HttpResponseRedirect(reverse('textvis:display', args=(new_doc.id,)))
         else:
+            print('badForm')
             form = DocForm()
             return render(request, 'textvis/new.html', { 'form': form })
 
@@ -131,3 +149,22 @@ class display(LoginRequiredMixin, View):
         def get(self, request, doc_id):
                 doc = get_object_or_404(VisDoc, pk=doc_id)
                 return render(request, 'textvis/display.html', { 'doc': doc})
+
+@login_required(login_url='/login/')
+def deleteDoc(request, doc_id):
+    doc = get_object_or_404(VisDoc, pk=doc_id)
+    if request.user == doc.creator:
+        doc.delete()
+        return HttpResponseRedirect(reverse('textvis:index'))
+    else:
+        return HttpResponseRedirect(reverse('textvis:index'))
+
+@login_required(login_url='/login/')
+def retainDoc(request, doc_id):
+    doc = get_object_or_404(VisDoc, pk=doc_id)
+    if request.user == doc.creator:
+        doc.retained = True
+        doc.save()
+        return HttpResponseRedirect(reverse('textvis:index'))
+    else:
+        return HttpResponseRedirect(reverse('textvis:index'))

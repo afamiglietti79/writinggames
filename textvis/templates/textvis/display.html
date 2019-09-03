@@ -1,6 +1,7 @@
 {% extends 'home/base.html' %}
 {% block content %}
 <h1>Your doc, Visualized!</h1>
+<h2><a href="{% url 'textvis:index' %}">Back to VisDoc List</a></h2>
 <div class="intro">
 <p>Below is the text of your document, with some key elements of style computed and highlighted.
   <a href="#documentation" data-toggle="collapse" aria-expanded="false" aria-controls="documentation">
@@ -23,31 +24,89 @@
 <h2>{{ doc.name }}</h2>
 <div class="row">
   <div class="col-3">
-    <ul class="statlist">
+    <a href="#docstats" data-toggle="collapse" aria-expanded="false" aria-controls="doc stats"><h4>Document Overall <span class="oi oi-caret-bottom" id="docstats-indicator" title="caret bottom" aria-hidden="true"></span>
+   </h4></a>
+    <ul class="statlist collapse show" id="docstats">
       <li>Word Count: {{ doc.word_count }}</li>
       <li>Average Word Length: {{ doc.avg_word_len|floatformat:2 }} Characters </li>
       <li>Avg Paragraph Length: {{ doc.para_len|floatformat }} Words</li>
       <li>Avg Sentence Length: {{ doc.sent_len|floatformat }} Words</li>
     </ul>
-    <ul class="statlist">
-      <li><span class="NN">Nouns:</span>{{ doc.percent_nouns|floatformat:2 }}%</li>
-      <li><span class="VB">Verbs:</span>{{ doc.percent_verbs|floatformat:2 }}%</li>
-      <li><span class="JJ">Adjectives:</span>{{ doc.percent_adj|floatformat:2 }}%</li>
-      <li><span class="RB">Adverbs:</span>{{ doc.percent_adv|floatformat:2 }}%</li>
+    <a href="#partsofspeech" data-toggle="collapse" aria-expanded="false" aria-controls="doc stats"><h4>Parts of Speech <span class="oi oi-caret-bottom" id="pos-indicator" title="caret bottom" aria-hidden="true"></h4></a>
+    <ul class="statlist collapse show" id="partsofspeech">
+      <li><button type="button" class="btn btn-outline-dark NN" id="NNbtn">Nouns:</button> {{ doc.percent_nouns|floatformat:2 }}%</li>
+      <li><button type="button" class="btn btn-outline-dark VB" id="VBbtn">Verbs:</button> {{ doc.percent_verbs|floatformat:2 }}%</li>
+      <li><button type="button" class="btn btn-outline-dark JJ" id="JJbtn">Adjectives:</button> {{ doc.percent_adj|floatformat:2 }}%</li>
+      <li><button type="button" class="btn btn-outline-dark RB" id="RBbtn">Adverbs:</button> {{ doc.percent_adv|floatformat:2 }}%</li>
+      <li><button type="button" class="btn btn-outline-dark CC" id="CCbtn">Coord. Conjunctions:</button> One per {{ doc.words_per_coord_conj|floatformat:2 }} words</li>
+      <li><button type="button" class="btn btn-outline-dark PRP" id="PRPbtn">Personal Pronouns:</button> One per {{ doc.words_per_personal_pro|floatformat:2 }} words</li>
     </ul>
-    <ul class="statlist">
-      <li><span class="common_word">Most Common Words:</span> <ul>
+    <a href="#commonwords" data-toggle="collapse" aria-expanded="false" aria-controls="doc stats"><h4>Most Common Words <span class="oi oi-caret-bottom" id="common_words-indicator" title="caret bottom" aria-hidden="true"></h4></a>
+    <ul class="statlist collapse show" id="commonwords">
         {% for key, value in doc.most_common_words_as_obj %}
         <li>{{ key }}({{ value }})</li>
-        {% endfor %}</ul></li>
-      <li><span class="common_word">Most Common Long Words:</span> <ul>
+        {% endfor %}
+    </ul>
+    <a href="#commonlongwords" data-toggle="collapse" aria-expanded="false" aria-controls="doc stats"><h4>Most Common Long Words <span class="oi oi-caret-bottom" id="common_long_words-indicator" title="caret bottom" aria-hidden="true"></h4></a>
+    <ul class="statlist collapse show" id="commonlongwords">
         {% for key, value in doc.most_common_long_words_as_obj %}
         <li>{{ key }}({{ value }})</li>
-         {% endfor %}</ul></li>
+         {% endfor %}
     </ul>
   </div>
   <div class="col-9">
     {{ doc.text | safe }}
   </div>
 </div>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+
+$(function() {
+  $("#docstats").on('shown.bs.collapse', function() {
+    $('#docstats-indicator').removeClass("oi-caret-right");
+    $('#docstats-indicator').addClass("oi-caret-bottom");
+  })
+  $("#docstats").on('hidden.bs.collapse', function() {
+    $('#docstats-indicator').removeClass("oi-caret-bottom");
+    $('#docstats-indicator').addClass("oi-caret-right");
+  })
+  $("#partsofspeech").on('shown.bs.collapse', function() {
+    $('#pos-indicator').removeClass("oi-caret-right");
+    $('#pos-indicator').addClass("oi-caret-bottom");
+  })
+  $("#partsofspeech").on('hidden.bs.collapse', function() {
+    $('#pos-indicator').removeClass("oi-caret-bottom");
+    $('#pos-indicator').addClass("oi-caret-right");
+  })
+  $("#commonwords").on('shown.bs.collapse', function() {
+    $('#common_words-indicator').removeClass("oi-caret-right");
+    $('#common_words-indicator').addClass("oi-caret-bottom");
+  })
+  $("#commonwords").on('hidden.bs.collapse', function() {
+    $('#common_words-indicator').removeClass("oi-caret-bottom");
+    $('#common_words-indicator').addClass("oi-caret-right");
+  })
+  $("#commonlongwords").on('shown.bs.collapse', function() {
+    $('#common_long_words-indicator').removeClass("oi-caret-right");
+    $('#common_long_words-indicator').addClass("oi-caret-bottom");
+  })
+  $("#commonlongwords").on('hidden.bs.collapse', function() {
+    $('#common_long_words-indicator').removeClass("oi-caret-bottom");
+    $('#common_long_words-indicator').addClass("oi-caret-right");
+  })
+  $('#NNbtn').on('click', function() {
+    $('.NN, .NNS, .NNP, .NNPS').toggleClass('inactive');
+  });
+  $('#VBbtn').on('click', function() {
+    $('.VB, .VBP, .VBZ, .VBD').toggleClass('inactive');
+  });
+  $('#JJbtn').on('click', function() {
+    $('.JJ, .JJR, .JJS').toggleClass('inactive');
+  });
+  $('#RBbtn').on('click', function() {
+    $('.RB, .RBR, .RBS').toggleClass('inactive');
+  });
+});
+</script>
 {% endblock %}

@@ -4,6 +4,10 @@
   font-style: italic;
 }
 
+.oi {
+  font-size: .9rem;
+}
+
 
 body {
   font-family: 'Noto Serif', serif;
@@ -40,12 +44,20 @@ h1, h2, h3, h4 {
   font-weight: 300;
 }
 
-h1{
+h1, h2{
   padding: 0px 10px;
 }
 
-.JJ, .JJR, .JJS, .NN, .NNS, .NNP, .NNPS, .VB, .VBP, .VBZ, .VBD, .RB, .RBR, .RBS {
+h2 {
+  font-size: 1.5rem;
+}
+
+.JJ, .JJR, .JJS, .NN, .NNS, .NNP, .NNPS, .VB, .VBP, .VBZ, .VBD, .RB, .RBR, .RBS, .PRP, .CC {
   padding: 1px 2px;
+}
+
+.JJ.inactive, .JJR.inactive, .JJS.inactive, .NN.inactive, .NNS.inactive, .NNP.inactive, .NNPS.inactive, .VB.inactive, .VBP.inactive, .VBZ.inactive, .VBD.inactive, .RB.inactive, .RBR.inactive, .RBS.inactive, .PRP.inactive, .CC.inactive {
+  background-color: inherit;
 }
 
 .JJ, .JJR, .JJS {
@@ -82,4 +94,9 @@ h1{
 
 .common_word {
   color: red;
+}
+
+.statlist {
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 5px;
 }

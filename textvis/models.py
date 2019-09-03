@@ -11,6 +11,7 @@ class VisDoc(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     host_course = models.ForeignKey(course, on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField()
+    retained = models.BooleanField(default=False)
     word_count = models.IntegerField('Word Count', default=0)
     para_count = models.IntegerField('Paragraph Count', default=0)
     sent_count = models.IntegerField('Sentence Count', default=0)
@@ -47,6 +48,12 @@ class VisDoc(models.Model):
 
     def percent_adv(self):
         return((self.adv/self.word_count) * 100)
+
+    def words_per_coord_conj(self):
+        return(1 / (self.coord_conj/self.word_count))
+
+    def words_per_personal_pro(self):
+        return(1 / (self.personal_pro/self.word_count))
 
     def most_common_words_as_obj(self):
         return(json.loads(self.most_common_words))

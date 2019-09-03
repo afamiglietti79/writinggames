@@ -22,5 +22,6 @@ urlpatterns = [
     path('course/', include('course.urls')),
     path('textvis/', include('textvis.urls')),
     path('feud/', include('feud.urls')),
+    path('scrabble/', include('scrabble.urls')),
     path('admin/', admin.site.urls),
 ]

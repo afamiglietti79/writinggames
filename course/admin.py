@@ -5,7 +5,7 @@ from .models import course, roll
 # Register your models here.
 
 class courseAdmin(admin.ModelAdmin):
-    fields = ['name', 'secret_code', 'start_date', 'time_offered']
+    fields = ['name', 'secret_code', 'start_date', 'time_offered', 'last_cleared']
 
 class rollAdmin(admin.ModelAdmin):
     fields = ['course', 'user','is_active']
