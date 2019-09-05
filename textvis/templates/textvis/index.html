@@ -13,7 +13,7 @@
               {% if doc.retained is False %}<a class="btn btn-sm btn-primary float-right mx-1" href="{% url 'textvis:retaindoc' doc.id %}">Retain</a>{% else %}<a class="btn btn-sm btn-success float-right mx-1" href="#">Saved!</a>{% endif %}
       </div>
     <div class="card-body">
-      {{ doc.text|truncatewords:100}}
+      {{ doc.text|striptags|truncatewords:100}}
     </div>
   </div>
   {% endfor %}
@@ -25,7 +25,7 @@
     <a href="{% url 'textvis:display' doc.id %}"><h3>{{ doc.name }} by {{ doc.creator.username }}</h3></a>
     </div>
     <div class="card-body">
-      {{ doc.text|truncatewords:100}}
+      {{ doc.text|striptags|truncatewords:100}}
     </div>
 </div>
 {% endfor %}
