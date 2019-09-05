@@ -20,9 +20,13 @@
 <hr>
 <h2>Classmates' Shared Docs</h2>
 {% for doc in course_docs %}
-  <div>
-    <a href="{% url 'textvis:display' 2 %}"><h3>{{ doc.name }} by {{ doc.creator.username }}<h3></a>
+<div class="card prompt-card">
+    <div class="card-header">
+    <a href="{% url 'textvis:display' doc.id %}"><h3>{{ doc.name }} by {{ doc.creator.username }}<h3></a>
+    </div>
+    <div class="card-body">
       {{ doc.text|safe|truncatewords:100}}
+    </div>
   </div>
 {% endfor %}
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
