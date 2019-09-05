@@ -22,7 +22,7 @@
 {% for doc in course_docs %}
 <div class="card prompt-card">
     <div class="card-header">
-    <a href="{% url 'textvis:display' doc.id %}"><h3>{{ doc.name }} by {{ doc.creator.username }}<h3></a>
+    <a href="{% url 'textvis:display' doc.id %}"><h3>{{ doc.name }} by {{ doc.creator.username }}</h3></a>
     </div>
     <div class="card-body">
       {{ doc.text|safe|truncatewords:100}}
