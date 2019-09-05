@@ -9,7 +9,7 @@
   <div class="card prompt-card">
       <div class="card-header">
         <a href="{% url 'textvis:display' doc.id %}">{{ doc.name }}</a> Created on: {{doc.date_created|date:"SHORT_DATE_FORMAT"}}
-              <a class="btn btn-sm btn-danger float-right mx-1 delete-btn" href="#"  data-name="{{ doc.name }}" data-url="{% url 'textvis:deletedoc' doc.id %}"">Delete</a>
+              <a class="btn btn-sm btn-danger float-right mx-1 delete-btn" href="#"  data-name="{{ doc.name }}" data-url="{% url 'textvis:deletedoc' doc.id %}">Delete</a>
               {% if doc.retained is False %}<a class="btn btn-sm btn-primary float-right mx-1" href="{% url 'textvis:retaindoc' doc.id %}">Retain</a>{% else %}<a class="btn btn-sm btn-success float-right mx-1" href="#">Saved!</a>{% endif %}
       </div>
     <div class="card-body">
@@ -27,7 +27,7 @@
     <div class="card-body">
       {{ doc.text|safe|truncatewords:100}}
     </div>
-  </div>
+</div>
 {% endfor %}
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
