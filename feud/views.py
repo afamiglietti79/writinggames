@@ -105,7 +105,13 @@ class editPrompt(LoginRequiredMixin, View):
 @login_required(login_url='/login/')
 def ajaxResponses(request, prompt_id):
     prompt = get_object_or_404(Prompt, pk=prompt_id)
-    if prompt.is_accepting_votes == prompt.WAITING_TO_VOTE:
+    user = request.user
+    if prompt.creator == request.user:
+        print("instructor")
+        vote_flag = "instr"
+        responses = prompt.response_set.order_by('-votes')
+        response_list = [{'id':r.pk, 'text': r.text, 'votes':r.votes, 'first_name':r.creator.first_name, 'last_name':r.creator.last_name } for r in responses]
+    elif prompt.is_accepting_votes == prompt.WAITING_TO_VOTE:
         responses = prompt.response_set.all()
         response_list = [{'id':r.pk, 'text': r.text, 'votes':r.votes} for r in responses]
         vote_flag = "wait"

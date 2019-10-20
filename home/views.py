@@ -3,6 +3,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .forms import UserProfileForm
 
 # Create your views here.
 
@@ -22,6 +26,25 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'home/signup.html', {'form': form})
+
+class profileUpdate(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+
+    def get(self, request):
+        user = request.user
+        form = UserProfileForm(instance=user)
+        return render(request, 'home/profileUpdate.html', { 'form': form, 'user':user })
+
+    def post(self, request):
+        user = request.user
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('home:index'))
+        else:
+            return render(request, 'home/profileUpdate.html', { 'form': form, 'user':user })
+
 
 def log_in(request):
     if request.method == 'POST':

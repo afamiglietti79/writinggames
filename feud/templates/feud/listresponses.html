@@ -7,8 +7,9 @@
 <div id="response_wrapper">
 </div>
 {% if prompt.creator == user %}
-<div id="prompt_controls">
-<a class="btn btn-lg btn-warning float-right" href="#" id="voteToggle">{% if prompt.is_accepting_votes == prompt.WAITING_TO_VOTE or prompt.is_accepting_votes == prompt.VOTING_COMPLETE %} Open Voting {% else %} Close Voting {% endif %}</a>
+<div id="prompt_controls" class="text-right">
+<button  class="btn btn-lg btn-warning" href="#" id="voteToggle">{% if prompt.is_accepting_votes == prompt.WAITING_TO_VOTE or prompt.is_accepting_votes == prompt.VOTING_COMPLETE %} Open Voting {% else %} Close Voting {% endif %}</button>
+<button class="btn btn-lg btn-primary" href="#" id="nameToggle">Toggle Student Name Display</button>
 </div>
 {% endif %}
 {% endblock %}
@@ -26,7 +27,14 @@ $(function() {
       row_template = "<div class='row row-response'><div class='col-9 response-text'>{RESPONSE}</div><div class='col-3 response-vote'>{VOTE_BUTTON}</div></div>"
       vote_flag = data['vote_flag']
       console.log(vote_flag)
-      if(vote_flag == "open") {
+      if(vote_flag == "instr") {
+        $.each(data['responses'], function(key, value) {
+          new_row = row_template.replace('{RESPONSE}', value['text'])
+          new_row = new_row.replace('{VOTE_BUTTON}', '<span class="response_author"> by: ' + value['first_name'] + ' ' + value['last_name'] + '</span>' + ' Votes: ' + value['votes'])
+          $("div#response_wrapper").append(new_row);
+        });
+      }
+      else if(vote_flag == "open") {
         $.each(data['responses'], function(key, value) {
           new_row = row_template.replace('{RESPONSE}', value['text'])
           new_row = new_row.replace('{VOTE_BUTTON}', '<a href="#" class="btn btn-primary vote_btn" data-id="' + value['id'] + '">Vote</a>')
@@ -67,6 +75,11 @@ $(function() {
     });
     load_responses();
   });
+
+  $('#nameToggle').on("click", function() {
+    $("span.response_author").toggleClass("d-none")
+  });
+
   var intervalID = window.setInterval(load_responses, 10000);
 })
 </script>
