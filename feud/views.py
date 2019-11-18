@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.urls import reverse
+from django.utils.html import strip_tags
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -33,7 +34,11 @@ class newPrompt(LoginRequiredMixin, View):
         new_prompt = Prompt()
         if form.is_valid():
             new_prompt.name = form.cleaned_data['name']
-            new_prompt.text = form.cleaned_data['text']
+            stripped = strip_tags(form.cleaned_data['text'])
+            paragraphed_text = ""
+            for graf in stripped.split('\n'):
+                paragraphed_text = paragraphed_text + '<p>' + graf + '</p>'
+            new_prompt.text = paragraphed_text
             new_prompt.creator = request.user
 
             active_roll = request.user.roll_set.get(is_active = True)
@@ -65,7 +70,11 @@ class displayPrompt(LoginRequiredMixin, View):
         form = ResponseForm(request.POST)
         new_response = Response()
         if form.is_valid():
-            new_response.text = form.cleaned_data['text']
+            stripped = strip_tags(form.cleaned_data['text'])
+            paragraphed_text = ""
+            for graf in stripped.split('\n'):
+                paragraphed_text = paragraphed_text + '<p>' + graf + '</p>'
+            new_response.text = paragraphed_text
             new_response.prompt = prompt
             new_response.creator = request.user
             new_response.date_created=timezone.now()

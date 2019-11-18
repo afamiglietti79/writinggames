@@ -14,7 +14,7 @@
       {% endif %}
       </div>
     <div class="card-body">
-      {{ prompt.text|truncatewords:200}}
+      {{ prompt.text|safe}}
     </div>
   </div>
 

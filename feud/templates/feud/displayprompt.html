@@ -2,7 +2,7 @@
 {% block content %}
 <h1>{{ prompt.name }}</h1>
 <p class="intro">Published: {{ prompt.date_created|date:"D d M Y" }} by {{ prompt.creator.username }} </p>
-<p>{{ prompt.text }}</p>
+<p>{{ prompt.text|safe }}</p>
 {% if prompt.creator == user %}
 <a class="btn btn-warning" href="{% url 'feud:listresponses' prompt.id %}">Skip to responses</a>
 {% endif %}
